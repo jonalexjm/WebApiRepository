@@ -81,7 +81,37 @@ namespace WebApi.Controllers
             var updatedProduct = await this.buildingRepository.UpdateAsync(resultBuildig);
 
             return Ok(updatedProduct);
+        }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.BadRequest(ModelState);
+            }
+
+            //buscar building
+            var resultBuilding = await this.buildingRepository.GetByIdAsync(id);
+            if (resultBuilding == null)
+            {
+                var noEncontrado = new
+                {
+                    codigo = 200,
+                    status = "success",
+                    objeto = "No encontrado"
+                };
+                return Ok(noEncontrado);
+            }
+
+            await this.buildingRepository.DeleteAsync(resultBuilding);
+            var buildingEliminado = new
+            {
+                codigo = 200,
+                status = "se elimino correctamente",
+                objeto = resultBuilding
+            };
+            return Ok(buildingEliminado);
         }
     }
 }
