@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.Dtos;
 using WebApi.Entities;
 
 namespace WebApi.Controllers
@@ -24,7 +25,20 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetBuildings()
         {
-            return Ok(this.buildingRepository.GetAll());
+            var restultBuildings = this.buildingRepository.GetAll();
+
+            return Ok(restultBuildings);
+
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBuildings(int id)
+        {
+            //buscar building
+            var resultBuildig = await this.buildingRepository.GetByIdAsync(id);
+
+            return Ok(resultBuildig);
+
         }
 
         [HttpPost]
