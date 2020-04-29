@@ -48,5 +48,40 @@ namespace WebApi.Controllers
             return Ok(newBuilding); ;
 
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutBuildings(int id, Building building)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.BadRequest(ModelState);
+            }
+
+            //buscar producto
+            var resultBuildig = await this.buildingRepository.GetByIdAsync(id);
+
+            if (resultBuildig == null)
+            {
+                var noEncontrado = new
+                {
+                    codigo = 200,
+                    status = "success",
+                    objeto = "No encontrado"
+                };
+                return Ok(noEncontrado);
+            }
+
+            resultBuildig.Name = building.Name;
+            resultBuildig.Address = building.Address;
+            resultBuildig.Phone = building.Phone;
+            resultBuildig.Country = building.Country;
+            resultBuildig.State = building.State;
+            resultBuildig.City = building.City;
+
+            var updatedProduct = await this.buildingRepository.UpdateAsync(resultBuildig);
+
+            return Ok(updatedProduct);
+
+        }
     }
 }
